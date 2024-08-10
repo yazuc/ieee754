@@ -12,41 +12,40 @@
 typedef union {
     float value;
     struct {
-        int mantissa : 24;
-        int expoente : 8;
-        int sinal : 1;
+        unsigned int mantissa : 23;
+        unsigned int expoente : 8;
+        unsigned int sinal : 1;
     } parts;
 } ieee754;
 
-float resolvedorMagico(char sinal, const char* valor1, const char* valor2);
+float resolvedorMagico(char sinal, ieee754 valor1, ieee754 valor2);
 void printaBin(int valor, int bits);
 void printaIeee754(ieee754 valor);
+void checaExcecao();
 
 int main(int argc, char *argv[]){
     feclearexcept(FE_ALL_EXCEPT);
-
-    // printf("Number of arguments: %d\n", argc);
 
     if(argc > 4){
         printf("escreve os bagulho direito mano, ta trollando?");
         return 0;
     }        
 
+    char* val1 = argv[1];
+    char op = argv[2][0]; 
+    char* val2 = argv[3];
+
     ieee754 ie;
-    ie.value = -235;
+    ie.value = atof(val1);
     printaIeee754(ie);
 
-    // for (int i = 0; i < argc; i++) {
-    //     printf("Argument %d: %s\n", i, argv[i]);
-    // }
+    ieee754 ie2;
+    ie2.value = atof(val2);
+    printaIeee754(ie2);
 
-    // char arr[argc - 1];
+    printf("%f \n", resolvedorMagico(op, ie, ie2));
 
-    // for(int i = 1; i < argc; i++)
-    //     arr[i - 1] = *argv[i];
-
-    // for(int i = 0; i < sizeof(arr); i++)
-    //     printf("%c", arr[i]);
+    checaExcecao();
 
     return 0;
 }
@@ -66,13 +65,13 @@ void printaIeee754(ieee754 ie){
 void printaBin(int valor, int bits){
 
     for (int i = bits - 1; i >= 0; i--) {
-        printf("%d", (valor >> i) & 1);
+        printf("%u", (valor >> i) & 1);
     }
 }
 
-float resolvedorMagico(char sinal, const char* valor1, const char* valor2) {
-    float num1 = atof(valor1);
-    float num2 = atof(valor2);
+float resolvedorMagico(char sinal, ieee754 valor1, ieee754 valor2) {
+    float num1 = valor1.value;
+    float num2 = valor2.value;
     
     switch (sinal) {
     case 'x':
@@ -89,7 +88,18 @@ float resolvedorMagico(char sinal, const char* valor1, const char* valor2) {
     }
 }
 
+void checaExcecao() {
 
+    printf("Exception: Division by zero %d\n", fetestexcept(FE_DIVBYZERO));
 
+    printf("Exception: Overflow %d\n", fetestexcept(FE_OVERFLOW));    
+    
+    printf("Exception: Underflow %d\n", fetestexcept(FE_UNDERFLOW));
+    
+    printf("Exception: Invalid operation %d\n", fetestexcept(FE_INVALID));
+        
+    printf("Exception: Inexact result %d\n", fetestexcept(FE_INEXACT));
+    
 
-
+    feclearexcept(FE_ALL_EXCEPT);
+}
