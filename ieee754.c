@@ -83,6 +83,7 @@ float resolvedorMagico(char sinal, ieee754 valor1, ieee754 valor2) {
     case '+':
         return num1 + num2;
     default:
+        //caso por algum diabo de motivo o usuário passe parametros nao utilizaveis
         printf("Erro: Operador inválido.\n");
         return 0.0;
     }
@@ -91,15 +92,11 @@ float resolvedorMagico(char sinal, ieee754 valor1, ieee754 valor2) {
 void checaExcecao() {
 
     printf("Exception: Division by zero %d\n", fetestexcept(FE_DIVBYZERO));
-
-    printf("Exception: Overflow %d\n", fetestexcept(FE_OVERFLOW));    
-    
-    printf("Exception: Underflow %d\n", fetestexcept(FE_UNDERFLOW));
-    
-    printf("Exception: Invalid operation %d\n", fetestexcept(FE_INVALID));
-        
+    printf("Exception: Overflow %d\n", fetestexcept(FE_OVERFLOW));        
+    printf("Exception: Underflow %d\n", fetestexcept(FE_UNDERFLOW));    
+    printf("Exception: Invalid operation %d\n", fetestexcept(FE_INVALID));        
     printf("Exception: Inexact result %d\n", fetestexcept(FE_INEXACT));
     
-
+    //limpa exceções dnv, pq might aswell
     feclearexcept(FE_ALL_EXCEPT);
 }
