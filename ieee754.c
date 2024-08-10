@@ -9,18 +9,32 @@
 // onde op é uma operação (+,−, ∗,/) e val1 e val2 são dois valores em ponto flutuante, NaN ou ±∞. 
 // (Use os símbolos x, X ou . para a multipliação. Não use o asteriso. )
 
+typedef union {
+    float value;
+    struct {
+        int mantissa : 24;
+        int expoente : 8;
+        int sinal : 1;
+    } parts;
+} ieee754;
 
 float resolvedorMagico(char sinal, const char* valor1, const char* valor2);
-void printaBin(int valor);
+void printaBin(int valor, int bits);
+void printaIeee754(ieee754 valor);
+
 int main(int argc, char *argv[]){
     feclearexcept(FE_ALL_EXCEPT);
 
     // printf("Number of arguments: %d\n", argc);
 
-    // if(argc > 4){
-    //     printf("escreve os bagulho direito mano, ta trollando?");
-    //     return 0;
-    // }        
+    if(argc > 4){
+        printf("escreve os bagulho direito mano, ta trollando?");
+        return 0;
+    }        
+
+    ieee754 ie;
+    ie.value = -235;
+    printaIeee754(ie);
 
     // for (int i = 0; i < argc; i++) {
     //     printf("Argument %d: %s\n", i, argv[i]);
@@ -34,36 +48,26 @@ int main(int argc, char *argv[]){
     // for(int i = 0; i < sizeof(arr); i++)
     //     printf("%c", arr[i]);
 
-    printaBin(23);
-
     return 0;
 }
 
-void printaBin(int valor){
+void printaIeee754(ieee754 ie){
+    int value = ie.value;
+    printaBin(ie.parts.sinal, 1);
+    printf(" ");
+    printaBin(ie.parts.expoente, 8);
+    printf(" ");
+    printaBin(ie.parts.mantissa, 24);
+    printf(" = %d", value);
+    printf("\n");
 
-    //divide, pega mod, e divide o resultado
+}
 
-    // 23/2 = 11 1
-    // 11 / 2 = 5 1
-    // 5 / 2 = 2  1
-    // 2 / 2 = 1 0
+void printaBin(int valor, int bits){
 
-    // 1, 1, 1, 0, 1
-
-    int bin[32];
-    int i = 0;
-    while(valor){       
-        bin[i] = valor % 2;      
-        valor = valor / 2;
-        i++;
+    for (int i = bits - 1; i >= 0; i--) {
+        printf("%d", (valor >> i) & 1);
     }
-
-    while (i)
-    {
-        i--;
-        printf("%d", bin[i]);
-    }
-    
 }
 
 float resolvedorMagico(char sinal, const char* valor1, const char* valor2) {
