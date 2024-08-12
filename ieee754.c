@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
     feclearexcept(FE_ALL_EXCEPT);
 
     if(argc > 4){
-        printf("escreve os bagulho direito mano, ta trollando?");
+        printf("escreva no formato val1 op val2, onde val sao numeros e op um operador entre (+, -, X, /)");
         return 0;
     }        
 
@@ -37,14 +37,19 @@ int main(int argc, char *argv[]){
 
     ieee754 ie;
     ie.value = atof(val1);
+    printf("valor 1: ");
     printaIeee754(ie);
 
     ieee754 ie2;
     ie2.value = atof(val2);
+    printf("valor 2: ");
     printaIeee754(ie2);
 
-    printf("%f \n", resolvedorMagico(op, ie, ie2));
-
+    float res = resolvedorMagico(op, ie, ie2);
+    ieee754 ie3;
+    ie3.value = res;
+    printf("res: ");
+    printaIeee754(ie3);
     checaExcecao();
 
     return 0;
@@ -57,7 +62,7 @@ void printaIeee754(ieee754 ie){
     printaBin(ie.parts.expoente, 8);
     printf(" ");
     printaBin(ie.parts.mantissa, 24);
-    printf(" = %d", value);
+    printf(" = %f\n", ie.value);
     printf("\n");
 
 }
@@ -75,6 +80,7 @@ float resolvedorMagico(char sinal, ieee754 valor1, ieee754 valor2) {
     
     switch (sinal) {
     case 'x':
+    case 'X':
         return num1 * num2;
     case '-':
         return num1 - num2;
@@ -91,11 +97,11 @@ float resolvedorMagico(char sinal, ieee754 valor1, ieee754 valor2) {
 
 void checaExcecao() {
 
-    printf("Exception: Division by zero %d\n", fetestexcept(FE_DIVBYZERO));
-    printf("Exception: Overflow %d\n", fetestexcept(FE_OVERFLOW));        
-    printf("Exception: Underflow %d\n", fetestexcept(FE_UNDERFLOW));    
-    printf("Exception: Invalid operation %d\n", fetestexcept(FE_INVALID));        
-    printf("Exception: Inexact result %d\n", fetestexcept(FE_INEXACT));
+    printf("Excecao FE_DIVBYZERO %d\n", fetestexcept(FE_DIVBYZERO));
+    printf("Excecao FE_OVERFLOW %d\n", fetestexcept(FE_OVERFLOW));        
+    printf("Excecao FE_UNDERFLOW %d\n", fetestexcept(FE_UNDERFLOW));    
+    printf("Excecao FE_INVALID %d\n", fetestexcept(FE_INVALID));        
+    printf("Excecao FE_INEXACT %d\n", fetestexcept(FE_INEXACT));
     
     //limpa exceções dnv, pq might aswell
     feclearexcept(FE_ALL_EXCEPT);
