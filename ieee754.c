@@ -5,6 +5,7 @@
 #include <string.h>
 #include <fenv.h>
 #include <stdlib.h>
+#include <math.h>
 // Ele recebe pela linha de comando uma expressão no formato val1 op val2 
 // onde op é uma operação (+,−, ∗,/) e val1 e val2 são dois valores em ponto flutuante, NaN ou ±∞. 
 // (Use os símbolos x, X ou . para a multipliação. Não use o asteriso. )
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]){
     char op = argv[2][0]; 
     char* val2 = argv[3];
 
-    ieee754 ie;
+    ieee754 ie;    
     ie.value = atof(val1);
     printf("valor 1: ");
     printaIeee754(ie);
